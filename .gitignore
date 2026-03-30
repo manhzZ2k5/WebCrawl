@@ -1,0 +1,50 @@
+# ----- OS / Editor -----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+
+# ----- IDEs -----
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# ----- Java / Maven / Gradle -----
+**/target/
+**/out/
+**/build/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+
+# ----- Spring Boot -----
+**/logs/
+**/log/
+
+# ----- Env / Secrets -----
+.env
+.env.*
+*.pem
+*.key
+
+# ----- Docker / Compose -----
+**/.docker/
+
+# ----- Misc -----
+*.pid
+*.seed
+*.cache
+
+
+.codex

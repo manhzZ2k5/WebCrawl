@@ -1,0 +1,118 @@
+logging:
+  level:
+    ROOT: INFO
+    com.fis.ioc.processor: DEBUG
+
+spring:
+  application:
+    name: processor
+    metadata: http://10.14.121.18:31091
+  temporal:
+    namespace: default
+    connection:
+      target: 10.14.121.18:31095
+    workersAutoDiscovery:
+      packages: com.fis.ioc.processor
+  #  config:
+  #    import: "metadata:http://admin:admin123@10.14.121.18:30500/config"
+  #    fail-fast: true
+  kafka:
+    bootstrap-servers: 10.15.68.187:9092
+    consumer:
+      properties:
+        spring.json.trusted.packages: "*"      # map TRUSTED_PACKAGES
+        spring.json.use.type.headers: true     # map USE_TYPE_INFO_HEADERS
+        max.poll.interval.ms: 300000           # map MAX_POLL_INTERVAL_MS_CONFIG
+        fetch.max.bytes: 5242880        # >= message size
+        max.partition.fetch.bytes: 5242880
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: ai-toanbc4
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true
+        max.request.size: 5242880       # 5MB, tùy bạn
+        buffer.memory: 6291456          # > max.request.size
+  datasource:
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    #    type: com.zaxxer.hikari.HikariDataSource
+    #    url: jdbc:mysql://10.14.121.8:3306/ioc-metadata?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&autoReconnect=true
+    #    username: ceca_gateway
+    #    password: Admin@25251325
+    #    hikari:
+    #      poolName: Hikari
+    #      auto-commit: false
+    raw:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://10.14.121.18:5432/test?reWriteBatchedInserts=true
+      username: postgres
+      password: econcadas2024
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        poolName: HikariPool-Raw
+        auto-commit: false
+        minimum-idle: 5
+        maximum-pool-size: 20
+        idle-timeout: 30000
+        connection-timeout: 30000
+        max-lifetime: 1800000
+    staging:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://10.14.121.18:5432/staging?reWriteBatchedInserts=true
+      username: postgres
+      password: econcadas2024
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        poolName: HikariPool-Staging
+        auto-commit: false
+        minimum-idle: 5
+        maximum-pool-size: 20
+    dw:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://10.14.121.18:5432/datawarehouse?reWriteBatchedInserts=true
+      username: postgres
+      password: econcadas2024
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        poolName: HikariPool-Staging
+        auto-commit: false
+        minimum-idle: 5
+        maximum-pool-size: 20
+    analysis:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://10.14.121.18:5432/analysis?reWriteBatchedInserts=true
+      username: postgres
+      password: econcadas2024
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        poolName: HikariPool-Staging
+        auto-commit: false
+        minimum-idle: 5
+        maximum-pool-size: 20
+    clickhouse:
+      jdbc-url: jdbc:clickhouse://10.15.119.228:8123?http_connection_provider=HTTP_URL_CONNECTION
+      driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+      hikari:
+        pool-name: HikariPool-ClickHouse
+        minimum-idle: 5
+        maximum-pool-size: 20
+snapshot:
+  source-table: enforcement_state_current
+  target-table: enforcement_state_snapshot
+  cron: "0 58 23 L * *"        # second minute hour day-of-month month day-of-week (L = last day)
+  timezone: Asia/Ho_Chi_Minh
+server:
+  port: 8088
+samples:
+  data:
+    language: english
+application:
+  kafka-topic:
+    ioc-metadata-update-rule: ioc_metadata_update_rule
+    ioc-metadata-update-master-data: ioc_metadata_update_master_data
+    ioc-metadata-update-staging-schema: ioc_metadata_update_staging_schema
+    ioc-processor-init-schema: ioc_processor_init_schema

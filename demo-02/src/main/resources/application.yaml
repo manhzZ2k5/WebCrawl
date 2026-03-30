@@ -1,0 +1,22 @@
+server:
+  port: 8080 # Gateway luôn đứng gác ở cổng 8080
+
+spring:
+  application:
+    name: api-gateway # Tên này sẽ hiện trên Eureka
+  cloud:
+    gateway:
+      routes:
+        # LUẬT SỐ 1: Định tuyến cho chức năng cào dữ liệu
+        - id: crawler_route
+          # lb = Load Balancer. Nó bảo Gateway: "Hãy lên Eureka tìm thằng nào tên là DEMO rồi ném request cho nó"
+          uri: lb://DEMO 
+          predicates:
+            # Bất cứ ai gọi vào đường dẫn bắt đầu bằng /api/crawler/ sẽ bị tóm vào luật này
+            - Path=/api/crawler/** # CẤU HÌNH TRỎ TỚI TỔNG ĐÀI EUREKA
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
