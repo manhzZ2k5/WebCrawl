@@ -5,20 +5,39 @@ spring:
   application:
     name: crawler-service  # Tên này sẽ hiện trên trang Dashboard
   kafka:
+    bootstrap-servers: localhost:9092
     producer:
-      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: crawler-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  datasource:
+    url: jdbc:postgresql://localhost:5435/storage_message
+    username: message_user
+    password: "123456"
+  jpa:
+    hibernate:
+      # update: Tu dong tao bang neu chua co, cap nhat cot neu co thay doi
+      ddl-auto: update
+    # Hien cau lenh SQL ra man hinh Console de de quan sat
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true # Dinh dang lai SQL cho de doc
+
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
   instance:
-    hostname: localhost 
+    hostname: localhost
 
 management:
   endpoints:
     web:
       exposure:
-        include: "health,info" 
+        include: "health,info"

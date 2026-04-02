@@ -1,6 +1,6 @@
 package Maven.demo;
 
-
+import Maven.demo.entity.Book;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,7 +38,7 @@ public class CrawlerService {
                     for (Element linkTag : linkTags) {
                         String title = linkTag.attr("title");
                         String fullLink = linkTag.absUrl("href");
-
+                    
                         Book myBook = new Book(title, fullLink);
                         String bookJson = mapper.writeValueAsString(myBook);
 
